@@ -24,12 +24,6 @@ node {
 				}
 			}				
 		}	
-		stage ('Deployment Stage') {
-			steps {
-				withMaven(maven : 'MAVEN_HOME'){
-					sh 'mvn deploy'
-				}
-			}				
-		}
+		
 	}
 }
