@@ -1,23 +1,35 @@
 pipeline {
-    agent any
-    tools { 
-        maven 'MAVEN_HOME' 
-        jdk 'JAVA_HOME' 
-    }
-    stages {
-        stage ('Initialize') {
-            steps {
-                sh '''
-                    echo "PATH = ${PATH}"
-                    echo MAVEN_HOME = ${MAVEN_HOME}"
-                ''' 
-            }
-        }
+	agent any
+	
+	stages {
+		stage ('Compile Stage') {
+			steps {
+				withMaven(maven : 'MAVEN_HOME'){
+					sh 'mvn clean compile'
+				}
+			}
+		}
 
-        stage ('Build') {
-            steps {
-                echo 'This is a minimal pipeline.'
-            }
-        }
-    }
+		stage ('Testing Stage') {
+			steps {
+				withMaven(maven : 'MAVEN_HOME'){
+					sh 'mvn test'
+				}
+			}
+		}
+		stage ('Installing Stage') {
+			steps {
+				withMaven(maven : 'MAVEN_HOME'){
+					sh 'mvn install'
+				}
+			}				
+		}	
+		stage ('Deployment Stage') {
+			steps {
+				withMaven(maven : 'MAVEN_HOME'){
+					sh 'mvn deploy'
+				}
+			}				
+		}
+	}
 }
